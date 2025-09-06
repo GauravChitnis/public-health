@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Chatbot - Login</title>
+    <!-- Quick styling with Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --med-blue: #0b7fa7;
+            --med-teal: #00a99d;
+            --bg: #f3fbfd;
+            --card: #ffffff;
+            --bot-bg: #e9f7f4;
+            --user-bg: #0d6efd;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            background-color: var(--bg);
+            background-image:
+                url('download(2).jpeg'),
+                radial-gradient(circle at 8% 8%, rgba(0,169,157,0.06), transparent 10%),
+                linear-gradient(180deg, rgba(11,127,167,0.04), rgba(0,169,157,0.02) 40%),
+                repeating-linear-gradient(90deg, rgba(0,0,0,0) 0 22px, rgba(0,169,157,0.015) 22px 23px);
+            background-blend-mode: normal, overlay, normal, normal;
+            background-repeat: no-repeat, repeat, repeat, repeat;
+            background-position: right top, left top, left top, left top;
+            background-size: 55% auto, auto, auto, 44px 44px;
+            padding: 24px 12px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Login Page Styles */
+        .login-container {
+            max-width: 420px;
+            width: 100%;
+            background: var(--card);
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(6,22,43,0.12);
+            border-left: 6px solid var(--med-teal);
+            padding: 0;
+            overflow: hidden;
+        }
+        .login-header {
+            background: linear-gradient(135deg, var(--med-blue), var(--med-teal));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .login-header .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .login-body {
+            padding: 2rem;
+        }
+        .phone-input-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .phone-display {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .phone-display:focus-within {
+            border-color: var(--med-blue);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(11,127,167,0.1);
+        }
+        .country-code {
+            color: #666;
+            font-weight: 600;
+            border-right: 1px solid #ddd;
+            padding-right: 0.5rem;
+        }
+        .phone-number {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 1.1rem;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--med-blue), var(--med-teal));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(11,127,167,0.3);
+        }
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        /* Chat Container Styles (hidden initially) */
+        .chat-container {
+            max-width: 720px;
+            margin: 18px auto;
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(6,22,43,0.08);
+            display: none;
+            flex-direction: column;
+            height: 78vh;
+            overflow: hidden;
+            border-left: 6px solid var(--med-teal);
+        }
+        .chat-header{
+            background: linear-gradient(90deg,var(--med-blue),var(--med-teal));
+            color: #fff;
+        }
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px;
+            background-image: repeating-linear-gradient(transparent, transparent 120px, rgba(0,0,0,0.01) 121px);
+        }
+        .message {
+            margin-bottom: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            max-width: 78%;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.35;
+            box-shadow: 0 4px 10px rgba(8,20,40,0.03);
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message i {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            flex-shrink: 0;
+        }
+        .user {
+            background-color: var(--user-bg);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+        .bot {
+            background-color: var(--bot-bg);
+            color: #012b27;
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+        .input-area {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid rgba(10,24,40,0.04);
+            background: rgba(255,255,255,0.8); /* Semi-transparent */
+            backdrop-filter: blur(5px);
+            align-items: center;
+        }
+        .input-area input {
+            border: 1px solid rgba(10,24,40,0.06);
+            padding: 10px 12px;
+            flex: 1;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .input-area input:focus {
+            border-color: var(--med-blue);
+            box-shadow: 0 0 0 2px rgba(11,127,167,0.1);
+        }
+        .input-area button {
+            border: none;
+            background: var(--med-blue);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .input-area button:hover {
+            background: #095d7a;
+            transform: translateY(-1px);
+        }
+        .input-area button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .disclaimer{
+            font-size: 0.78rem;
+            color: #586374;
+            padding: 8px 16px 14px 16px;
+        }
+        .typing-indicator {
+            display: none;
+            padding: 8px 14px;
+            margin-bottom: 12px;
+            background: var(--bot-bg);
+            border-radius: 14px;
+            border-bottom-left-radius: 6px;
+            max-width: 78%;
+            align-self: flex-start;
+        }
+        .typing-dots {
+            display: inline-flex;
+            gap: 3px;
+        }
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            background: var(--med-teal);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+            30% { opacity: 1; transform: scale(1); }
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-container" id="login-screen">
+    <div class="login-header">
+        <div class="logo">
+            <i class="bi bi-hospital-fill"></i>
+        </div>
+        <h2 class="mb-2">Health Assistant</h2>
+        <p class="mb-0 opacity-75">Enter your phone number to continue</p>
+    </div>
+    <div class="login-body">
+        <div class="phone-input-container">
+            <div class="phone-display">
+                <span class="country-code">+91</span>
+                <input 
+                    type="text" 
+                    class="phone-number" 
+                    id="phone-input" 
+                    placeholder="98765 43210"
+                    maxlength="11"
+                >
+            </div>
+            <div class="error-message" id="error-message">
+                Please enter a valid 10-digit phone number
+            </div>
+        </div>
+        <button type="button" class="login-btn" id="login-btn" onclick="handleLogin()">
+            <i class="bi bi-arrow-right-circle"></i>
+            Continue to Chat
+        </button>
+        <div class="text-center mt-3">
+            <small class="text-muted">
+                <i class="bi bi-shield-check me-1"></i>
+                Your information is secure and private
+            </small>
+        </div>
+    </div>
+</div>
+
+<!-- Chat Screen -->
+<div class="chat-container" id="chat-screen">
+    <div class="chat-header d-flex align-items-center p-3">
+        <i class="bi bi-hospital-fill fs-3 me-2"></i>
+        <div class="flex-grow-1">
+            <div class="h6 mb-0">Public Health Assistant</div>
+            <small class="text-white-50">Reliable, evidence-based guidance</small>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <small class="text-white-50">
+                <i class="bi bi-person me-1"></i>
+                <span id="user-phone"></span>
+            </small>
+            <button class="logout-btn" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-box" id="chat-box" role="log" aria-live="polite">
+        <!-- Messages will appear here -->
+    </div>
+    
+    <div class="typing-indicator" id="typing-indicator">
+        <i class="bi bi-stethoscope" aria-hidden="true"></i>
+        <span class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+    </div>
+    
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Ask about symptoms, prevention, or healthy habits..." onkeypress="if(event.key==='Enter'){sendMessage()}" autocomplete="off">
+        <button onclick="sendMessage()" id="send-button"><i class="bi bi-send-fill"></i> Send</button>
+    </div>
+    <div class="disclaimer text-center">This assistant provides general health information and is not a substitute for professional medical advice.</div>
+</div>
+
+<script>
+    const healthResponses = {};
+    let isTyping = false;
+    let userPhone = '';
+
+    // Format phone number as user types
+    document.getElementById('phone-input').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        
+        // Format as XXXXX XXXXX
+        if (value.length > 5) {
+            value = value.substring(0, 5) + ' ' + value.substring(5, 10);
+        }
+        
+        e.target.value = value;
+        document.getElementById('error-message').style.display = 'none';
+    });
+
+    // Handle login
+    function handleLogin() {
+        const phoneInput = document.getElementById('phone-input');
+        const errorMessage = document.getElementById('error-message');
+        const phone = phoneInput.value.trim();
+        
+        // Remove spaces and validate
+        const cleanPhone = phone.replace(/\s/g, '');
+        
+        if (cleanPhone.length !== 10 || !/^\d{10}$/.test(cleanPhone)) {
+            errorMessage.style.display = 'block';
+            phoneInput.focus();
+            return;
+        }
+
+        // Switch to chat
+        userPhone = `+91 ${phone}`;
+        document.getElementById('user-phone').textContent = userPhone;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display = 'flex';
+        document.body.style.alignItems = 'flex-start';
+        document.body.style.paddingTop = '0';
+
+        // Add welcome message
+        setTimeout(() => {
+            appendMessage(`Hello! I'm your health assistant. I can provide general information about symptoms, prevention, and healthy habits. How can I help you today?`, "bot");
+            document.getElementById('user-input').focus();
+        }, 500);
+    }
+
+    // Allow Enter key to login
+    document.getElementById('phone-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    });
+
+    // Logout functionality
+    function logout() {
+        userPhone = '';
+        document.getElementById('chat-box').innerHTML = '';
+        document.getElementById('user-input').value = '';
+        document.getElementById('phone-input').value = '';
+        document.getElementById('login-screen').style.display = 'block';
+        document.getElementById('chat-screen').style.display = 'none';
+        
+        // Reset body layout for login screen
+        document.body.style.alignItems = 'center';
+        document.body.style.justifyContent = 'center';
+        document.body.style.padding = '24px 12px';
+        
+        document.getElementById('phone-input').focus();
+    }
+
+    // Chat functionality
+    async function sendMessage() {
+        const inputField = document.getElementById("user-input");
+        const sendButton = document.getElementById("send-button");
+        const message = inputField.value.trim();
+        
+        if (!message || isTyping) return;
+
+        isTyping = true;
+        sendButton.disabled = true;
+        inputField.disabled = true;
+
+        appendMessage(message, "user");
+        inputField.value = "";
+
+        showTypingIndicator();
+
+        setTimeout(() => {
+            hideTypingIndicator();
+            const response = generateHealthResponse(message);
+            appendMessage(response, "bot");
+            
+            isTyping = false;
+            sendButton.disabled = false;
+            inputField.disabled = false;
+            inputField.focus();
+        }, 1000 + Math.random() * 1500);
+    }
+
+    function generateHealthResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        if (lowerMessage.includes('emergency') || lowerMessage.includes('chest pain') || 
+            lowerMessage.includes('difficulty breathing') || lowerMessage.includes('severe')) {
+            return 'If you\'re experiencing a medical emergency, please call emergency services (108 or 102 in India) immediately or go to the nearest emergency room. Don\'t delay seeking immediate medical attention.';
+        }
+        
+        if (lowerMessage.includes('medication') || lowerMessage.includes('medicine') || 
+            lowerMessage.includes('prescription') || lowerMessage.includes('drug')) {
+            return 'I cannot provide specific medication advice. Please consult with a healthcare provider, pharmacist, or refer to official medical resources for medication information and guidance.';
+        }
+        
+        if (lowerMessage.includes('health') || lowerMessage.includes('wellness') || 
+            lowerMessage.includes('advice')) {
+            return 'I\'m here to provide general health information! You can ask me about common symptoms, healthy lifestyle habits, prevention tips, or general wellness topics. What specific area would you like to know about?';
+        }
+        
+        return 'I understand you\'re asking about health topics. Could you be more specific? I can help with information about common symptoms, healthy habits, prevention strategies, or general wellness questions. Remember, this is for educational purposes and not a substitute for professional medical advice.';
+    }
+
+    function appendMessage(text, sender) {
+        const chatBox = document.getElementById("chat-box");
+        const msgDiv = document.createElement("div");
+        msgDiv.classList.add("message", sender);
+
+        const icon = document.createElement('i');
+        icon.className = sender === 'user' ? 'bi bi-person-fill' : 'bi bi-stethoscope';
+        icon.setAttribute('aria-hidden', 'true');
+
+        const content = document.createElement('span');
+        content.textContent = text;
+
+        msgDiv.appendChild(icon);
+        msgDiv.appendChild(content);
+
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        const indicator = document.getElementById("typing-indicator");
+        const chatBox = document.getElementById("chat-box");
+        indicator.style.display = "inline-flex";
+        chatBox.appendChild(indicator);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function hideTypingIndicator() {
+        const indicator = document.getElementById("typing-indicator");
+        indicator.style.display = "none";
+    }
+
+    // Focus on input when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('phone-input').focus();
+    });
+</script>
+
+</body>
+</html>
